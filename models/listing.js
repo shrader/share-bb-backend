@@ -17,16 +17,8 @@ class Listing {
    * Throws BadRequestError if listing already in database.
    * */
 
-  //    CREATE TABLE listings (
-  //     id SERIAL PRIMARY KEY,
-  //     location TEXT NOT NULL,
-  //     price INTEGER CHECK (price >= 0),
-  //     capacity INTEGER CHECK (capacity >= 1),
-  //     owner_username VARCHAR(25) NOT NULL
-  //       REFERENCES users ON DELETE CASCADE
-  //   );
 
-  static async create({ location, price, capacity, description, title, username }) {
+  static async create({ location, price, capacity, description, title, ownerUsername }) {
     const duplicateCheck = await db.query(
       `SELECT location
            FROM listings
@@ -38,16 +30,16 @@ class Listing {
 
     const result = await db.query(
       `INSERT INTO listings
-           (location, price, capacity, username)
+           (title, location, price, capacity, owner_username, description)
            VALUES ($1, $2, $3, $4, $5, $6)
-           RETURNING title, location, price, capacity, description, username`,
+           RETURNING title, location, price, capacity, description, owner_username AS ownerUsername`,
       [
         title,
         location,
         price,
         capacity,
         description,
-        username
+        ownerUsername
       ],
     );
     const listing = result.rows[0];

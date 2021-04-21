@@ -16,10 +16,10 @@ CREATE TABLE listings (
   location TEXT NOT NULL,
   price INTEGER CHECK (price >= 0),
   capacity INTEGER CHECK (capacity >= 1),
-  description TEXT NOT NULL,
-  owner_username VARCHAR(25) NOT NULL
-    REFERENCES users ON DELETE CASCADE
+  description TEXT NOT NULL
 );
+  -- owner_username VARCHAR(25) NOT NULL
+  --   REFERENCES users ON DELETE CASCADE
 
 
 CREATE TABLE bookings (
