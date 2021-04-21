@@ -3,7 +3,7 @@
 const db = require("../db");
 const { BadRequestError, NotFoundError } = require("../expressError");
 // const { filterCompanies } = require("../helpers/filterCompanies");
-// const { sqlForPartialUpdate } = require("../helpers/sql");
+ const { sqlForPartialUpdate } = require("../helpers/sql");
 
 /** Related functions for companies. */
 
@@ -14,7 +14,7 @@ class Listing {
    *
    * Returns { location, price, capacity, description, title, username }
    *
-   * Throws BadRequestError if company already in database.
+   * Throws BadRequestError if listing already in database.
    * */
 
   //    CREATE TABLE listings (
