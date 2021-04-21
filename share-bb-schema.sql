@@ -12,9 +12,11 @@ CREATE TABLE users (
 
 CREATE TABLE listings (
   id SERIAL PRIMARY KEY,
+  title VARCHAR(50) NOT NULL UNIQUE,
   location TEXT NOT NULL,
   price INTEGER CHECK (price >= 0),
   capacity INTEGER CHECK (capacity >= 1),
+  description TEXT NOT NULL,
   owner_username VARCHAR(25) NOT NULL
     REFERENCES users ON DELETE CASCADE
 );
