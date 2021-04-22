@@ -39,7 +39,7 @@ class Booking {
       `INSERT INTO bookings
            (renter_id, listing_id, start_date, end_date)
            VALUES ($1, $2, $3, $4)
-           RETURNING id, renter_id, listing_id, start_date, end_date`,
+           RETURNING id, renter_id AS renterId, listing_id AS listingId, start_date AS startDate, end_date as endDate`,
       [
         renterId,
         listingId,
@@ -60,11 +60,11 @@ class Booking {
   static async findAll() {
     const bookingsRes = await db.query(
       `SELECT id,
-              renter_id,
-              listing_id,
-              start_date,
-              end_date
-           FROM booking
+              renter_id AS renterId,
+              listing_id AS listingId
+              start_date AS startDate,
+              end_date AS endDate
+           FROM bookings
            ORDER BY listing_id`);
     return bookingsRes.rows;
   }
@@ -85,7 +85,7 @@ class Booking {
     const { setCols, values } = sqlForPartialUpdate(data);
     const idVarIdx = "$" + (values.length + 1);
 
-    const querySql = `UPDATE listings 
+    const querySql = `UPDATE bookings 
                       SET ${setCols} 
                       WHERE title = ${idVarIdx} 
                       RETURNING 
