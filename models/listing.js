@@ -18,7 +18,7 @@ class Listing {
    * */
 
 
-  static async create({ location, price, capacity, description, title, ownerUsername }) {
+  static async create({ location, price, capacity, description, title, ownerId }) {
     const duplicateCheck = await db.query(
       `SELECT location
            FROM listings
@@ -30,16 +30,16 @@ class Listing {
 
     const result = await db.query(
       `INSERT INTO listings
-           (title, location, price, capacity, owner_username, description)
+           (title, location, price, capacity, description, owner_id)
            VALUES ($1, $2, $3, $4, $5, $6)
-           RETURNING title, location, price, capacity, description, owner_username AS ownerUsername`,
+           RETURNING title, location, price, capacity, description, owner_id AS ownerId`,
       [
         title,
         location,
         price,
         capacity,
         description,
-        ownerUsername
+        ownerId
       ],
     );
     const listing = result.rows[0];
@@ -59,7 +59,7 @@ class Listing {
               capacity, 
               description, 
               title, 
-              username
+              owner_id
            FROM listings
            ORDER BY title`);
     return listingsRes.rows;
@@ -79,7 +79,7 @@ class Listing {
             capacity, 
             description, 
             title, 
-            username
+            owner_id
       FROM listings
       WHERE ${filters.sql}
       ORDER BY title`, filters.values
@@ -159,7 +159,7 @@ class Listing {
                           capacity, 
                           description, 
                           title, 
-                          username`;
+                          owner_id`;
     const result = await db.query(querySql, [...values, title]);
     const listing = result.rows[0];
 

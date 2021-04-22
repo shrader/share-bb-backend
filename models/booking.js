@@ -1,7 +1,7 @@
 /**
  * CREATE TABLE bookings (
   id SERIAL PRIMARY KEY,
-  renter_username VARCHAR(25)
+  renter_id VARCHAR(25)
     REFERENCES users ON DELETE CASCADE,
   listings_id INTEGER
     REFERENCES listings ON DELETE CASCADE,
@@ -17,31 +17,31 @@ const { sqlForPartialUpdate } = require("../helpers/sql");
 class Booking {
   /** Create a booking (from data), update db, return new listing data.
    *
-   * data should be { renter_username, listing_id, start_date, end_date }
+   * data should be { renter_id, listing_id, start_date, end_date }
    *
-   * Returns { id, renter_username, listing_id, start_date, end_date}
+   * Returns { id, renter_id, listing_id, start_date, end_date}
    *
    * Throws BadRequestError if booking already in database.
    * */
 
 
-  static async create({ renterUsername, listingId, startDate, endDate }) {
+  static async create({ renterId, listingId, startDate, endDate }) {
     const duplicateCheck = await db.query(
-      `SELECT listing_id, renter_username
+      `SELECT listing_id, start_date
            FROM bookings
-           WHERE listing_id = $1 AND renter_username = $2`,
-      [listingId, renterUsername]);
+           WHERE listing_id = $1 AND start_date = $2`,
+      [listingId, startDate]);
 
     if (duplicateCheck.rows[0])
-      throw new BadRequestError(`Duplicate listing: ${location}`);
+      throw new BadRequestError(`Duplicate booking`);
 
     const result = await db.query(
-      `INSERT INTO listings
-           (renter_username, listing_id, start_date, end_date)
+      `INSERT INTO bookings
+           (renter_id, listing_id, start_date, end_date)
            VALUES ($1, $2, $3, $4)
-           RETURNING id, renter_username, listing_id, start_date, end_date`,
+           RETURNING id, renter_id, listing_id, start_date, end_date`,
       [
-        renterUsername,
+        renterId,
         listingId,
         startDate,
         endDate
@@ -54,13 +54,13 @@ class Booking {
 
    /** Find all listings.
    *
-   * Returns [{ id, renter_username, listing_id, start_date, end_date }, ...]
+   * Returns [{ id, renter_id, listing_id, start_date, end_date }, ...]
    * */
 
   static async findAll() {
     const bookingsRes = await db.query(
       `SELECT id,
-              renter_username,
+              renter_id,
               listing_id,
               start_date,
               end_date
@@ -74,9 +74,9 @@ class Booking {
    * This is a "partial update" --- it's fine if data doesn't contain all the
    * fields; this only changes provided ones.
    *
-   * Data can include: { renter_username, listing_id, start_date, end_date }
+   * Data can include: { renter_id, listing_id, start_date, end_date }
    *
-   * Returns { id, renter_username, listing_id, start_date, end_date}
+   * Returns { id, renter_id, listing_id, start_date, end_date}
    *
    * Throws NotFoundError if not found.
    */
@@ -90,7 +90,7 @@ class Booking {
                       WHERE title = ${idVarIdx} 
                       RETURNING 
                       id,
-                      renter_username,
+                      renter_id,
                       listing_id,
                       start_date,
                       end_date`;
@@ -120,3 +120,5 @@ class Booking {
   }
 
 }
+
+module.exports = Booking;
