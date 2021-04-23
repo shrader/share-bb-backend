@@ -54,7 +54,8 @@ class Listing {
 
   static async findAll() {
     const listingsRes = await db.query(
-      `SELECT location, 
+      `SELECT id,
+              location, 
               price, 
               capacity, 
               description, 
