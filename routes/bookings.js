@@ -70,6 +70,14 @@ router.get("/", async function (req, res, next) {
 });
 
 
+router.get("/:id", async function (req, res, next) {
+  console.log("params",req.params.id)
+  let bookingId = req.params.id
+  const bookings = await Booking.findOne(bookingId);
+  return res.json({ bookings });
+});
+
+
 /** PATCH /[id] { booking } => { booking }
  *
  * Data can include:

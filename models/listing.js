@@ -65,6 +65,23 @@ class Listing {
     return listingsRes.rows;
   }
 
+
+  static async findOne(id) {
+    const listingsRes = await db.query(
+      `SELECT id,
+              location, 
+              price, 
+              capacity, 
+              description, 
+              title, 
+              owner_id
+            WHERE id = $1
+           FROM listings`, [id]);
+    return listingsRes.rows[0];
+  }
+
+
+
   /** Find filtered companies
    *
    * Returns [{ location, price, capacity, description, title, username }, ...]

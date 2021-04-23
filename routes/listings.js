@@ -66,7 +66,7 @@ router.get("/", async function (req, res, next) {
  */
 
 router.get("/:id", async function (req, res, next) {
-  const listing = await Listing.get(req.params.id);
+  const listing = await Listing.findOne(req.params.id);
   return res.json({ listing });
 });
 

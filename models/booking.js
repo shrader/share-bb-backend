@@ -61,12 +61,26 @@ class Booking {
     const bookingsRes = await db.query(
       `SELECT id,
               renter_id AS renterId,
-              listing_id AS listingId
+              listing_id AS listingId,
               start_date AS startDate,
               end_date AS endDate
            FROM bookings
            ORDER BY listing_id`);
     return bookingsRes.rows;
+  }
+
+
+
+  static async findOne(id) {
+    const bookingsRes = await db.query(
+      `SELECT id,
+              renter_id AS renterId,
+              listing_id AS listingId,
+              start_date AS startDate,
+              end_date AS endDate
+           FROM bookings
+           WHERE id = $1`, [id]);
+    return bookingsRes.rows[0];
   }
 
    /** Update booking data with `data`.
