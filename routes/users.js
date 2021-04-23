@@ -35,7 +35,7 @@ router.post("/", async function (req, res, next) {
     throw new BadRequestError(errs);
   }
 
-  const user = await User.register(req.body);
+  const user = await User.signup(req.body);
   const token = createToken(user);
   return res.status(201).json({ user, token });
 });

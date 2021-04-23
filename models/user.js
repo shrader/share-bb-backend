@@ -56,7 +56,7 @@ class User {
    * Throws BadRequestError on duplicates.
    **/
 
-  static async register(
+  static async signup(
       { username, password, firstName, lastName, email, userType }) {
     const duplicateCheck = await db.query(
           `SELECT username
